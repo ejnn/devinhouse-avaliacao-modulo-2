@@ -9,6 +9,7 @@ public class Processo {
     private int id;
     private LocalDate entrada;
     private String codigo;
+    private int numero;
     private String assunto;
     private String descricao;
     private String[] interessados;
@@ -19,6 +20,10 @@ public class Processo {
 
     public LocalDate getEntrada() {
 	return entrada;
+    }
+
+    public int getNumero() {
+	return numero;
     }
 
     public String getCodigo() {
@@ -43,6 +48,10 @@ public class Processo {
 
     public void setEntrada(LocalDate entrada) {
 	this.entrada = entrada;
+    }
+
+    public void setNumero(int numero) {
+	this.numero = numero;
     }
 
     public void setCodigo(String codigo) {
