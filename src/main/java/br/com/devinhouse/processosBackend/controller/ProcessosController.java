@@ -6,6 +6,7 @@ import java.util.HashMap;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -30,6 +31,12 @@ public class ProcessosController {
     @GetMapping("v1/processo/{id}")
     public Processo getProcessoPorId(@PathVariable Integer id) {
 	return processos.get(id);
+    }
+
+    @PutMapping("v1/processo")
+    public Processo putProcesso(@RequestBody Processo processo) {
+	processos.put(processo.getId(), processo);
+	return processo;
     }
 
 }
