@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import br.com.devinhouse.processosBackend.model.Processo;
@@ -18,6 +19,11 @@ public class ProcessosController {
     public Processo postProcesso(@RequestBody Processo processo) {
 	processos.put(processo.getId(), processo);
 	return processo;
+    }
+
+    @GetMapping("v1/processos")
+    public Processo[] getProcessos() {
+	return processos.values().toArray(Processo[]::new);
     }
 
 }
