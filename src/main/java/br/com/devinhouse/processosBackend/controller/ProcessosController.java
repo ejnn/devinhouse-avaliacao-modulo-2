@@ -1,0 +1,23 @@
+package br.com.devinhouse.processosBackend.controller;
+
+import java.util.Map;
+import java.util.HashMap;
+
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import br.com.devinhouse.processosBackend.model.Processo;
+
+@RestController
+public class ProcessosController {
+
+    private final Map<Integer, Processo> processos = new HashMap<>();
+
+    @PostMapping(path="/v1/processo", consumes="application/json")
+    public Processo postProcesso(@RequestBody Processo processo) {
+	processos.put(processo.getId(), processo);
+	return processo;
+    }
+
+}
