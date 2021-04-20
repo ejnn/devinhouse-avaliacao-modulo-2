@@ -6,19 +6,12 @@ public class Processo {
 
     private static int idDisponivel;
 
-    private final int id;
-    private final LocalDate entrada;
-    private final String codigo;
-
+    private int id;
+    private LocalDate entrada;
+    private String codigo;
     private String assunto;
     private String descricao;
     private String[] interessados;
-
-    public Processo() {
-	id = idDisponivel++;
-	entrada = LocalDate.now();
-	codigo = "SOFT " + entrada.getYear() + "/" + id;
-    }
 
     public int getId() {
 	return id;
@@ -42,6 +35,18 @@ public class Processo {
 
     public String[] getInteressados() {
 	return interessados;
+    }
+
+    public void setId(int id) {
+	this.id = id;
+    }
+
+    public void setEntrada(LocalDate entrada) {
+	this.entrada = entrada;
+    }
+
+    public void setCodigo(String codigo) {
+	this.codigo = codigo;
     }
 
     public void setAssunto(String assunto) {
