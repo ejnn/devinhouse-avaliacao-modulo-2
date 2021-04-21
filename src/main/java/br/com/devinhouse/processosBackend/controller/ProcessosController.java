@@ -1,9 +1,10 @@
 package br.com.devinhouse.processosBackend.controller;
 
+import java.time.LocalDate;
+
+import java.util.Collection;
 import java.util.Map;
 import java.util.HashMap;
-
-import java.time.LocalDate;
 import java.util.NoSuchElementException;
 
 import org.springframework.web.bind.annotation.RestController;
@@ -13,46 +14,49 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import br.com.devinhouse.processosBackend.model.Processo;
 
 @RestController
 public class ProcessosController {
 
-    private int numeroDisponivel;
+    private int idDisponivel;
     private final Map<Integer, Processo> processos = new HashMap<>();
 
     @PostMapping(path="v1/processo", consumes="application/json")
     public Processo postProcesso(@RequestBody Processo processo) {
-	processo.setId(processo.hashCode());
+	processo.setId(idDisponivel++);
 	processo.setEntrada(LocalDate.now());
-	processo.setNumero(numeroDisponivel++);
-	processo.setCodigo("SOFT " + processo.getEntrada().getYear() + "/" + processo.getNumero());
+	processo.setCodigo("SOFT " + processo.getEntrada().getYear() + "/" + processo.getId());
 
 	processos.put(processo.getId(), processo);
 	return processo;
     }
 
     @GetMapping("v1/processos")
-    public Processo[] getProcessos() {
-	return processos.values().toArray(Processo[]::new);
+    public Collection<Processo> getProcessos() {
+	return processos.values();
     }
 
-    @GetMapping("v1/processo/{identifier}")
-    public Processo getProcesso(@PathVariable Integer identifier) {
-	Processo ret = processos.get(identifier);
+    @GetMapping("v1/processo")
+    public Processo getProcesso(@RequestParam String codigo) {
 
-	// identifier may be either id or numero
-	if (ret == null) {
-	    try {
-		ret = processos.values().stream()
-		    .filter(p -> identifier.equals(p.getNumero())).findFirst().get();
-	    }
-	    catch (NoSuchElementException e) {
-	    }
+	Processo ret = null;
+	try {
+	    ret = processos.values().stream()
+	          .filter(p -> p.getCodigo().equals(codigo)).findFirst().get();
+	}
+	catch (NoSuchElementException e) {
+	    // no problem, just return nothing
 	}
 
 	return ret;
+    }
+
+    @GetMapping("v1/processo/{id}")
+    public Processo getProcesso(@PathVariable Integer id) {
+	return processos.get(id);
     }
 
     @PutMapping(path="v1/processo/{id}", consumes="application/json")
@@ -60,13 +64,11 @@ public class ProcessosController {
 
 	Processo original = processos.get(id);
 	if (original == null) {
-	    postProcesso(processo);
-	    return processo;
+	    return postProcesso(processo);
 	}
 
 	processo.setId(original.getId());
 	processo.setEntrada(original.getEntrada());
-	processo.setNumero(original.getNumero());
 	processo.setCodigo(original.getCodigo());
 
 	processos.put(id, processo);
